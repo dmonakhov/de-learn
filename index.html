@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>de-learn</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+  :root { --bg: #edf0f5; --surface: #fff; --ink: #18202c; --muted: #5b6678; --line: #d5dce8; --accent: #2446c4; }
+  @media (prefers-color-scheme: dark) {
+    :root { color-scheme: dark; --bg: #10141b; --surface: #19202b; --ink: #e7ecf4; --muted: #9aa6b8; --line: #2e3949; --accent: #93a9ff; }
+  }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.5 "Source Sans 3", system-ui, sans-serif; padding: 40px 16px; }
+  main { max-width: 640px; margin: 0 auto; display: grid; gap: 24px; }
+  h1 { font: 700 34px/1.1 Bitter, Georgia, serif; margin: 0; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 8px; }
+  p { margin: 6px 0 0; color: var(--muted); }
+  a.tool { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; color: inherit; text-decoration: none; }
+  a.tool:hover, a.tool:focus-visible { border-color: var(--accent); }
+  a.tool b { font: 700 20px Bitter, Georgia, serif; color: var(--accent); }
+</style>
+<main>
+  <header>
+    <h1>de-learn</h1>
+    <p>Kleine Werkzeuge zum Deutschlernen · Small tools for learning German</p>
+  </header>
+  <section>
+    <h2>A1</h2>
+    <a class="tool" href="A1/Verbkasten.html">
+      <b>Verbkasten</b>
+      <p>Die 30 wichtigsten Verben: Übersetzung und Konjugation im Präsens, mit Karteikasten-Wiederholung.</p>
+    </a>
+  </section>
+</main>
+</html>
