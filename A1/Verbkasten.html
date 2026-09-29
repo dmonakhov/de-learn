@@ -1,0 +1,649 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verbkasten A1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --bg: #edf0f5;
+    --surface: #ffffff;
+    --surface-2: #f5f7fb;
+    --ink: #18202c;
+    --muted: #5b6678;
+    --line: #d5dce8;
+    --accent: #2446c4;
+    --accent-ink: #ffffff;
+    --accent-soft: #e3e9fb;
+    --rule: #dde6f3;
+    --margin: #e39a96;
+    --good: #1d7f55;
+    --good-soft: #dff2e8;
+    --bad: #c03b33;
+    --bad-soft: #fbe4e2;
+    --change: #b0500a;
+    --display: "Bitter", Georgia, "Times New Roman", serif;
+    --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #10141b; --surface: #19202b; --surface-2: #212937; --ink: #e7ecf4; --muted: #9aa6b8;
+      --line: #2e3949; --accent: #93a9ff; --accent-ink: #0d1430; --accent-soft: #243056; --rule: #232d3d;
+      --margin: #7a4442; --good: #5fcf97; --good-soft: #173828; --bad: #ff8a80; --bad-soft: #3d1d1c; --change: #f0a35c;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #10141b; --surface: #19202b; --surface-2: #212937; --ink: #e7ecf4; --muted: #9aa6b8;
+    --line: #2e3949; --accent: #93a9ff; --accent-ink: #0d1430; --accent-soft: #243056; --rule: #232d3d;
+    --margin: #7a4442; --good: #5fcf97; --good-soft: #173828; --bad: #ff8a80; --bad-soft: #3d1d1c; --change: #f0a35c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 17px/1.5 var(--body);
+    padding-inline: 16px;
+    padding-block: 20px 48px;
+  }
+  .app { max-width: 720px; margin: 0 auto; display: grid; gap: 20px; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Header */
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+  .brand h1 { font: 700 30px/1.1 var(--display); margin: 0; letter-spacing: -0.01em; }
+  .brand p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+  .meters { display: grid; gap: 6px; min-width: 220px; flex: 0 1 280px; }
+  .meter { display: grid; grid-template-columns: 96px 1fr auto; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+  .meter .bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+  .meter .bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width .3s; }
+  .meter b { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+
+  /* Tabs */
+  nav.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  nav.tabs button {
+    background: none; border: 0; padding: 10px 14px; font-weight: 600; color: var(--muted);
+    border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap;
+  }
+  nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+  /* Controls */
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+  .seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 3px; }
+  .seg button { border: 0; background: none; padding: 5px 12px; border-radius: 6px; font-size: 15px; color: var(--muted); }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 3px 11px; font-size: 14px; color: var(--muted); }
+  .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); font-weight: 600; }
+
+  /* Index card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: 0 1px 0 var(--line), 0 8px 24px -12px rgba(20,30,60,.25);
+    overflow: hidden;
+  }
+  .card-head {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 10px 20px; border-bottom: 2px solid var(--margin); font-size: 13px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .card-head .score { font-variant-numeric: tabular-nums; text-transform: none; letter-spacing: 0; }
+  .score .ok { color: var(--good); font-weight: 700; }
+  .score .no { color: var(--bad); font-weight: 700; }
+  .card-body {
+    padding: 22px 20px 24px;
+    background-image: repeating-linear-gradient(to bottom, transparent 0 31px, var(--rule) 31px 32px);
+    background-position: 0 14px;
+    display: grid; gap: 16px;
+  }
+  .fach { display: inline-flex; align-items: center; gap: 6px; }
+  .dots { display: inline-flex; gap: 3px; }
+  .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--accent); }
+
+  .prompt { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .prompt .word { font: 700 clamp(30px, 7vw, 42px)/1.15 var(--display); letter-spacing: -0.01em; overflow-wrap: anywhere; }
+  .prompt .word.en { font-weight: 500; }
+  .sub { color: var(--muted); font-size: 16px; }
+  .sub em { font-style: normal; color: var(--ink); }
+  .typechip { font-size: 12px; text-transform: none; letter-spacing: 0; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); }
+
+  .speak {
+    width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface);
+    display: inline-grid; place-items: center; color: var(--accent); flex: none;
+  }
+  .speak svg { width: 18px; height: 18px; }
+
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 480px) { .options { grid-template-columns: 1fr; } }
+  .opt {
+    text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 8px;
+    padding: 12px 14px; font-size: 17px; display: flex; gap: 10px; align-items: baseline;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--accent); }
+  .opt kbd { font: 12px var(--mono); color: var(--muted); }
+  .opt.right { background: var(--good-soft); border-color: var(--good); }
+  .opt.wrong { background: var(--bad-soft); border-color: var(--bad); }
+  .opt:disabled { cursor: default; }
+
+  .answer-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  input.ans {
+    font: 600 20px var(--mono); color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-bottom: 2px solid var(--accent); border-radius: 6px 6px 0 0;
+    padding: 8px 12px; min-width: 0; flex: 1 1 200px;
+  }
+  input.ans.right { border-color: var(--good); background: var(--good-soft); }
+  input.ans.wrong { border-color: var(--bad); background: var(--bad-soft); }
+  .btn {
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    border-radius: 8px; padding: 9px 18px; font-weight: 700;
+  }
+  .btn.ghost { background: var(--surface); color: var(--accent); }
+  .btn.small { padding: 5px 12px; font-size: 14px; font-weight: 600; }
+  .umlauts { display: flex; gap: 6px; }
+  .umlauts button {
+    width: 38px; height: 38px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 6px;
+    font: 600 17px var(--mono);
+  }
+
+  .feedback { border-radius: 8px; padding: 12px 14px; display: grid; gap: 4px; }
+  .feedback.good { background: var(--good-soft); }
+  .feedback.bad { background: var(--bad-soft); }
+  .feedback .verdict { font-weight: 700; }
+  .feedback.good .verdict { color: var(--good); }
+  .feedback.bad .verdict { color: var(--bad); }
+  .feedback .note { color: var(--muted); font-size: 15px; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+  .hint-key { color: var(--muted); font-size: 13px; }
+
+  /* Conjugation */
+  .sentence { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .sentence .pron { font: 700 28px var(--display); min-width: 3ch; }
+  .ctable { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; align-items: center; }
+  .ctable .p { color: var(--muted); font-size: 16px; text-align: right; }
+  .ctable .f { font: 17px var(--mono); }
+  .ctable .row-hl { background: var(--accent-soft); border-radius: 4px; padding: 0 6px; margin: 0 -6px; }
+  .ctable input.ans { font-size: 17px; padding: 5px 10px; flex: none; width: 100%; max-width: 260px; }
+  .ctable .solution { font: 14px var(--mono); color: var(--bad); margin-left: 8px; }
+  .end { color: var(--accent); font-weight: 600; }
+  .chg { color: var(--change); font-weight: 600; }
+  .tip { font-size: 15px; color: var(--muted); border-left: 3px solid var(--change); padding-left: 10px; }
+
+  /* List */
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); }
+  .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; background: var(--surface-2); position: sticky; top: 0; }
+  td.v { font: 700 16px var(--display); }
+  td.m { color: var(--muted); }
+  td.f { font-family: var(--mono); font-size: 14px; }
+  tr:last-child td { border-bottom: 0; }
+  .progress-cell { display: grid; gap: 3px; font-size: 11px; color: var(--muted); }
+  .footer-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 14px; color: var(--muted); }
+  .danger { color: var(--bad); border-color: var(--bad); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <header>
+    <div class="brand">
+      <h1>Verbkasten</h1>
+      <p>Die 30 wichtigsten Verben für Deutsch A1</p>
+    </div>
+    <div class="meters" aria-label="Fortschritt">
+      <div class="meter"><span>Übersetzung</span><span class="bar"><i id="m-tr"></i></span><b id="m-tr-n">0/30</b></div>
+      <div class="meter"><span>Konjugation</span><span class="bar"><i id="m-cj"></i></span><b id="m-cj-n">0/30</b></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="tab-tr" data-tab="tr" aria-selected="true">Übersetzen</button>
+    <button role="tab" id="tab-cj" data-tab="cj" aria-selected="false">Konjugieren</button>
+    <button role="tab" id="tab-list" data-tab="list" aria-selected="false">Verbliste</button>
+  </nav>
+
+  <!-- Translation -->
+  <section id="pane-tr" role="tabpanel" aria-labelledby="tab-tr">
+    <div class="controls" style="margin-bottom:14px">
+      <div class="seg" id="tr-dir">
+        <button data-v="de-en" aria-pressed="true">Deutsch → Englisch</button>
+        <button data-v="en-de" aria-pressed="false">Englisch → Deutsch</button>
+      </div>
+      <div class="seg" id="tr-mode">
+        <button data-v="choice" aria-pressed="true">Auswählen</button>
+        <button data-v="type" aria-pressed="false">Eintippen</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span id="tr-fach"></span><span class="score" id="tr-score"></span></div>
+      <div class="card-body" id="tr-body"></div>
+    </div>
+  </section>
+
+  <!-- Conjugation -->
+  <section id="pane-cj" role="tabpanel" aria-labelledby="tab-cj" hidden>
+    <div class="controls" style="margin-bottom:14px">
+      <div class="seg" id="cj-mode">
+        <button data-v="one" aria-pressed="true">Einzelform</button>
+        <button data-v="table" aria-pressed="false">Ganze Tabelle</button>
+      </div>
+      <div class="chips" id="cj-filter">
+        <button class="chip" data-v="all" aria-pressed="true">Alle</button>
+        <button class="chip" data-v="reg" aria-pressed="false">Regelmäßig</button>
+        <button class="chip" data-v="vow" aria-pressed="false">Vokalwechsel</button>
+        <button class="chip" data-v="irr" aria-pressed="false">sein &amp; haben</button>
+        <button class="chip" data-v="mod" aria-pressed="false">Modalverben</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span id="cj-fach"></span><span class="score" id="cj-score"></span></div>
+      <div class="card-body" id="cj-body"></div>
+    </div>
+  </section>
+
+  <!-- List -->
+  <section id="pane-list" role="tabpanel" aria-labelledby="tab-list" hidden>
+    <div class="legend" style="margin-bottom:10px">
+      <span><span class="end">Endung</span> in Blau</span>
+      <span><span class="chg">Stammänderung</span> in Orange</span>
+      <span>Punkte = Fach im Karteikasten (1–5)</span>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Verb</th><th>Bedeutung</th><th>ich</th><th>du</th><th>er/sie/es</th><th>wir</th><th>ihr</th><th>sie/Sie</th><th>Fach</th></tr></thead>
+        <tbody id="list-body"></tbody>
+      </table>
+    </div>
+    <div class="footer-row" style="margin-top:12px">
+      <span>Dein Fortschritt wird nur in diesem Browser gespeichert.</span>
+      <button class="btn ghost small danger" id="reset">Fortschritt zurücksetzen</button>
+    </div>
+  </section>
+</div>
+
+<script>
+const PRON = ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"];
+const TYPES = { reg: "regelmäßig", vow: "Vokalwechsel", irr: "unregelmäßig", mod: "Modalverb" };
+
+// From "Die wichtigsten Verben – Deutsch A1" + Präsens forms
+const V = [
+  { de: "sein", en: ["to be"], ex: "Ich bin müde.", t: "irr", f: ["bin", "bist", "ist", "sind", "seid", "sind"], tip: "Komplett unregelmäßig – auswendig lernen." },
+  { de: "haben", en: ["to have"], ex: "Ich habe ein Auto.", t: "irr", f: ["habe", "hast", "hat", "haben", "habt", "haben"], tip: "du hast, er hat – das b fällt weg." },
+  { de: "machen", en: ["to do", "to make"], ex: "Ich mache Hausaufgaben.", t: "reg", f: ["mache", "machst", "macht", "machen", "macht", "machen"] },
+  { de: "gehen", en: ["to go"], ex: "Ich gehe nach Hause.", t: "reg", f: ["gehe", "gehst", "geht", "gehen", "geht", "gehen"] },
+  { de: "kommen", en: ["to come"], ex: "Ich komme aus Deutschland.", t: "reg", f: ["komme", "kommst", "kommt", "kommen", "kommt", "kommen"] },
+  { de: "wohnen", en: ["to live"], note: "in einem Ort / einer Wohnung", ex: "Ich wohne in Berlin.", t: "reg", f: ["wohne", "wohnst", "wohnt", "wohnen", "wohnt", "wohnen"] },
+  { de: "leben", en: ["to live"], note: "existieren, das Leben", ex: "Ich lebe in Deutschland.", t: "reg", f: ["lebe", "lebst", "lebt", "leben", "lebt", "leben"] },
+  { de: "lernen", en: ["to learn"], ex: "Ich lerne Deutsch.", t: "reg", f: ["lerne", "lernst", "lernt", "lernen", "lernt", "lernen"] },
+  { de: "arbeiten", en: ["to work"], ex: "Ich arbeite heute.", t: "reg", f: ["arbeite", "arbeitest", "arbeitet", "arbeiten", "arbeitet", "arbeiten"], tip: "Stamm endet auf -t: du arbeit-e-st, er arbeit-e-t." },
+  { de: "sprechen", en: ["to speak"], ex: "Ich spreche Deutsch.", t: "vow", f: ["spreche", "sprichst", "spricht", "sprechen", "sprecht", "sprechen"], tip: "e → i bei du und er/sie/es." },
+  { de: "lesen", en: ["to read"], ex: "Ich lese ein Buch.", t: "vow", f: ["lese", "liest", "liest", "lesen", "lest", "lesen"], tip: "e → ie bei du und er/sie/es. du liest (nicht „liesst“)." },
+  { de: "schreiben", en: ["to write"], ex: "Ich schreibe eine E-Mail.", t: "reg", f: ["schreibe", "schreibst", "schreibt", "schreiben", "schreibt", "schreiben"] },
+  { de: "essen", en: ["to eat"], ex: "Ich esse Brot.", t: "vow", f: ["esse", "isst", "isst", "essen", "esst", "essen"], tip: "e → i bei du und er/sie/es. du isst = er isst." },
+  { de: "trinken", en: ["to drink"], ex: "Ich trinke Wasser.", t: "reg", f: ["trinke", "trinkst", "trinkt", "trinken", "trinkt", "trinken"] },
+  { de: "schlafen", en: ["to sleep"], ex: "Ich schlafe acht Stunden.", t: "vow", f: ["schlafe", "schläfst", "schläft", "schlafen", "schlaft", "schlafen"], tip: "a → ä bei du und er/sie/es." },
+  { de: "sehen", en: ["to see", "to watch"], ex: "Ich sehe einen Film.", t: "vow", f: ["sehe", "siehst", "sieht", "sehen", "seht", "sehen"], tip: "e → ie bei du und er/sie/es." },
+  { de: "hören", en: ["to hear", "to listen"], ex: "Ich höre Musik.", t: "reg", f: ["höre", "hörst", "hört", "hören", "hört", "hören"] },
+  { de: "kaufen", en: ["to buy"], ex: "Ich kaufe Milch.", t: "reg", f: ["kaufe", "kaufst", "kauft", "kaufen", "kauft", "kaufen"] },
+  { de: "finden", en: ["to find"], ex: "Ich finde mein Handy.", t: "reg", f: ["finde", "findest", "findet", "finden", "findet", "finden"], tip: "Stamm endet auf -d: du find-e-st, er find-e-t." },
+  { de: "geben", en: ["to give"], ex: "Ich gebe dir das Buch.", t: "vow", f: ["gebe", "gibst", "gibt", "geben", "gebt", "geben"], tip: "e → i bei du und er/sie/es." },
+  { de: "nehmen", en: ["to take"], ex: "Ich nehme den Bus.", t: "vow", f: ["nehme", "nimmst", "nimmt", "nehmen", "nehmt", "nehmen"], tip: "e → i und h → m: du nimmst, er nimmt." },
+  { de: "fahren", en: ["to drive", "to go"], note: "mit einem Fahrzeug", ex: "Ich fahre mit dem Bus.", t: "vow", f: ["fahre", "fährst", "fährt", "fahren", "fahrt", "fahren"], tip: "a → ä bei du und er/sie/es." },
+  { de: "laufen", en: ["to walk", "to run"], ex: "Ich laufe im Park.", t: "vow", f: ["laufe", "läufst", "läuft", "laufen", "lauft", "laufen"], tip: "au → äu bei du und er/sie/es." },
+  { de: "spielen", en: ["to play"], ex: "Ich spiele Fußball.", t: "reg", f: ["spiele", "spielst", "spielt", "spielen", "spielt", "spielen"] },
+  { de: "lieben", en: ["to love"], ex: "Ich liebe meine Familie.", t: "reg", f: ["liebe", "liebst", "liebt", "lieben", "liebt", "lieben"] },
+  { de: "möchten", en: ["would like"], ex: "Ich möchte einen Kaffee.", t: "mod", f: ["möchte", "möchtest", "möchte", "möchten", "möchtet", "möchten"], tip: "ich und er/sie/es sind gleich: ich möchte, er möchte." },
+  { de: "können", en: ["can", "to be able to"], ex: "Ich kann Deutsch sprechen.", t: "mod", f: ["kann", "kannst", "kann", "können", "könnt", "können"], tip: "Singular mit a: ich kann, du kannst, er kann. ich = er/sie/es, keine Endung." },
+  { de: "müssen", en: ["must", "to have to"], ex: "Ich muss arbeiten.", t: "mod", f: ["muss", "musst", "muss", "müssen", "müsst", "müssen"], tip: "Singular ohne ü: ich muss, du musst, er muss." },
+  { de: "wollen", en: ["to want"], ex: "Ich will Deutsch lernen.", t: "mod", f: ["will", "willst", "will", "wollen", "wollt", "wollen"], tip: "Singular mit i: ich will, du willst, er will." },
+  { de: "brauchen", en: ["to need"], ex: "Ich brauche Hilfe.", t: "reg", f: ["brauche", "brauchst", "braucht", "brauchen", "braucht", "brauchen"] },
+];
+
+// ---------- Storage (Leitner boxes 0..4 = Fach 1..5) ----------
+const KEY = "verbkasten.v1";
+const MAXBOX = 4, LEARNED = 3;
+let store = { tr: {}, cj: {}, prefs: {} };
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.tr && s.cj) store = { prefs: {}, ...s }; } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+const box = (map, k) => map[k] || 0;
+function grade(map, k, ok) { map[k] = ok ? Math.min(MAXBOX, box(map, k) + 1) : 0; save(); updateMeters(); }
+const cjBoxVerb = i => Math.min(...PRON.map((_, p) => box(store.cj, i + ":" + p)));
+
+// Weighted pick: lower Fach → more likely; avoid recent items.
+function pick(keys, map, recent) {
+  let pool = keys.filter(k => !recent.includes(k));
+  if (!pool.length) pool = keys;
+  const w = pool.map(k => [16, 8, 4, 2, 1][typeof map === "function" ? map(k) : box(map, k)]);
+  let r = Math.random() * w.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < pool.length; i++) { r -= w[i]; if (r <= 0) return pool[i]; }
+  return pool[pool.length - 1];
+}
+const remember = (recent, k, n) => { recent.push(k); while (recent.length > n) recent.shift(); };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+// ---------- Answer checking ----------
+const norm = s => s.toLowerCase().replace(/[.!?,;]+$/g, "").replace(/\s+/g, " ").trim();
+const translit = s => s.replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
+const stripTo = s => s.replace(/^to /, "");
+// returns "exact" | "translit" | false
+function matchDe(input, target) {
+  const a = norm(input), b = norm(target);
+  if (a === b) return "exact";
+  if (translit(a) === translit(b)) return "translit";
+  return false;
+}
+function matchEn(input, v) {
+  const a = stripTo(norm(input));
+  return v.en.some(e => stripTo(e) === a);
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const enText = v => v.en.join(" / ");
+
+// ---------- Form highlighting ----------
+const ENDINGS = ["est", "et", "st", "en", "t", "e"];
+function markForm(v, f) {
+  if (v.de === "sein") return `<span class="chg">${f}</span>`;
+  const stem = v.de.replace(/e?n$/, "");
+  let s = f, end = "";
+  if (f.startsWith(stem)) { s = stem; end = f.slice(stem.length); }
+  else { const e = ENDINGS.find(e => f.endsWith(e) && f.length > e.length + 1); if (e) { s = f.slice(0, -e.length); end = e; } }
+  const stemHtml = s === stem ? s : `<span class="chg">${s}</span>`;
+  return stemHtml + (end ? `<span class="end">${end}</span>` : "");
+}
+function conjTable(v, hl = -1) {
+  return `<div class="ctable">${PRON.map((p, i) =>
+    `<span class="p">${p}</span><span class="f"><span class="${i === hl ? "row-hl" : ""}">${markForm(v, v.f[i])}</span></span>`).join("")}</div>`;
+}
+
+// ---------- Speech ----------
+const canSpeak = "speechSynthesis" in window;
+function say(text) {
+  if (!canSpeak) return;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = "de-DE"; u.rate = 0.9; speechSynthesis.speak(u); } catch (e) {}
+}
+const speakBtn = text => canSpeak
+  ? `<button class="speak" data-say="${esc(text)}" aria-label="Aussprache anhören" title="Anhören"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button>`
+  : "";
+document.addEventListener("click", e => { const b = e.target.closest("[data-say]"); if (b) say(b.dataset.say); });
+
+// Umlaut keys insert into the last focused answer field
+let lastInput = null;
+document.addEventListener("focusin", e => { if (e.target.matches("input.ans")) lastInput = e.target; });
+const umlautKeys = () => `<div class="umlauts">${["ä", "ö", "ü", "ß"].map(c => `<button type="button" data-ch="${c}" tabindex="-1">${c}</button>`).join("")}</div>`;
+document.addEventListener("mousedown", e => { if (e.target.closest("[data-ch]")) e.preventDefault(); });
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-ch]"); if (!b || !lastInput || lastInput.disabled) return;
+  const i = lastInput, s = i.selectionStart ?? i.value.length, en = i.selectionEnd ?? s;
+  i.value = i.value.slice(0, s) + b.dataset.ch + i.value.slice(en);
+  i.focus(); i.setSelectionRange(s + 1, s + 1);
+});
+
+const fachHtml = (label, b) => `<span class="fach">${label} · Fach ${b + 1}<span class="dots">${[0, 1, 2, 3, 4].map(i => `<i class="${i <= b ? "on" : ""}"></i>`).join("")}</span></span>`;
+const scoreHtml = s => `<span class="ok">${s.right}</span> richtig · <span class="no">${s.wrong}</span> falsch`;
+
+// ---------- Translation trainer ----------
+const tr = { dir: store.prefs.dir || "de-en", mode: store.prefs.mode || "choice", cur: null, done: false, recent: [], right: 0, wrong: 0, opts: [], hint: false };
+
+function nextTr() {
+  tr.cur = pick(V.map((_, i) => i), store.tr, tr.recent);
+  remember(tr.recent, tr.cur, 6);
+  tr.done = false; tr.hint = false; tr.typed = "";
+  const v = V[tr.cur];
+  const others = shuffle(V.map((_, i) => i).filter(i => i !== tr.cur && !V[i].en.some(e => v.en.includes(e))));
+  tr.opts = shuffle([tr.cur, ...others.slice(0, 3)]);
+  renderTr();
+}
+
+function renderTr() {
+  const v = V[tr.cur], deEn = tr.dir === "de-en";
+  document.getElementById("tr-fach").innerHTML = fachHtml(`Verb ${tr.cur + 1}/30`, box(store.tr, tr.cur));
+  document.getElementById("tr-score").innerHTML = scoreHtml(tr);
+  const blanked = v.ex.replace(/^(\S+) (\S+)/, "$1 ___");
+  let h = "";
+  if (deEn) {
+    h += `<div class="prompt"><span class="word" lang="de">${v.de}</span>${speakBtn(v.de)}</div>`;
+    h += `<div class="sub">Beispiel: <em lang="de">${v.ex}</em></div>`;
+  } else {
+    h += `<div class="prompt"><span class="word en">${enText(v)}</span></div>`;
+    h += v.note ? `<div class="sub">(${v.note})</div>` : "";
+    if (!tr.done) h += tr.hint ? `<div class="sub">Tipp: <em lang="de">${blanked}</em></div>` : `<div><button class="btn ghost small" id="tr-hint">Tipp: Beispielsatz zeigen</button></div>`;
+  }
+
+  if (tr.mode === "choice") {
+    h += `<div class="options">${tr.opts.map((i, n) => {
+      let cls = "";
+      if (tr.done) { if (i === tr.cur) cls = "right"; else if (i === tr.picked) cls = "wrong"; }
+      return `<button class="opt ${cls}" data-opt="${i}" ${tr.done ? "disabled" : ""}><kbd>${n + 1}</kbd><span ${deEn ? "" : 'lang="de"'}>${deEn ? enText(V[i]) : V[i].de}</span></button>`;
+    }).join("")}</div>`;
+  } else {
+    h += `<form class="answer-row" id="tr-form" autocomplete="off">
+      <input class="ans ${tr.done ? (tr.ok ? "right" : "wrong") : ""}" id="tr-input" ${deEn ? 'lang="en" placeholder="English meaning"' : 'lang="de" placeholder="Infinitiv, z.B. gehen"'}
+        autocapitalize="off" autocorrect="off" spellcheck="false" value="${esc(tr.typed || "")}" ${tr.done ? "disabled" : ""}>
+      ${deEn ? "" : umlautKeys()}
+      ${tr.done ? "" : `<button class="btn" type="submit">Prüfen</button>`}
+    </form>`;
+  }
+
+  if (tr.done) {
+    h += `<div class="feedback ${tr.ok ? "good" : "bad"}">
+      <span class="verdict">${tr.ok ? "Richtig!" : "Leider falsch."}</span>
+      <span><b lang="de">${v.de}</b> = ${enText(v)}${v.note ? ` <span class="note">(${v.note})</span>` : ""}</span>
+      ${deEn ? "" : `<span lang="de">${v.ex}</span>`}
+      ${tr.note ? `<span class="note">${tr.note}</span>` : ""}
+    </div>
+    <div class="actions"><span class="hint-key">Enter = weiter</span><button class="btn" id="tr-next">Weiter</button></div>`;
+  } else if (tr.mode === "choice") {
+    h += `<div class="actions"><span class="hint-key">Tasten 1–4 zum Auswählen</span></div>`;
+  }
+  document.getElementById("tr-body").innerHTML = h;
+  if (tr.mode === "type" && !tr.done) document.getElementById("tr-input").focus({ preventScroll: true });
+  if (tr.done) document.getElementById("tr-next").focus({ preventScroll: true });
+}
+
+function answerTr(ok, note = "") {
+  tr.done = true; tr.ok = ok; tr.note = note;
+  ok ? tr.right++ : tr.wrong++;
+  grade(store.tr, tr.cur, ok);
+  if (tr.dir === "en-de" || ok) say(V[tr.cur].de);
+  renderTr();
+}
+
+document.getElementById("tr-body").addEventListener("click", e => {
+  if (e.target.closest("#tr-next")) return nextTr();
+  if (e.target.closest("#tr-hint")) { tr.hint = true; return renderTr(); }
+  const o = e.target.closest("[data-opt]");
+  if (o && !tr.done) { tr.picked = +o.dataset.opt; answerTr(tr.picked === tr.cur); }
+});
+document.getElementById("tr-body").addEventListener("submit", e => {
+  e.preventDefault();
+  if (tr.done) return;
+  const val = document.getElementById("tr-input").value;
+  if (!val.trim()) return;
+  tr.typed = val;
+  const v = V[tr.cur];
+  if (tr.dir === "de-en") return answerTr(matchEn(val, v));
+  const m = matchDe(val, v.de);
+  if (m) return answerTr(true, m === "translit" ? `Schreibweise mit Umlaut: ${v.de}` : "");
+  const twin = V.find(w => w !== v && matchDe(val, w.de) && w.en.some(x => v.en.includes(x)));
+  if (twin) return answerTr(true, `Auch richtig! Hier war „${v.de}“ gemeint. ${twin.de} = ${enText(twin)} (${twin.note || ""}).`);
+  answerTr(false, `Deine Antwort: ${esc(val)}`);
+});
+
+// ---------- Conjugation trainer ----------
+const cj = { mode: store.prefs.cjMode || "one", filter: store.prefs.cjFilter || "all", v: 0, p: 0, done: false, recent: [], right: 0, wrong: 0, results: [], typed: [] };
+const cjVerbs = () => V.map((_, i) => i).filter(i => cj.filter === "all" || V[i].t === cj.filter);
+
+function nextCj() {
+  cj.done = false; cj.typed = []; cj.results = [];
+  if (cj.mode === "one") {
+    const keys = cjVerbs().flatMap(i => PRON.map((_, p) => i + ":" + p));
+    const k = pick(keys, store.cj, cj.recent);
+    remember(cj.recent, k, 8);
+    [cj.v, cj.p] = k.split(":").map(Number);
+  } else {
+    const k = pick(cjVerbs().map(String), k => cjBoxVerb(+k), cj.recent);
+    remember(cj.recent, k, 3);
+    cj.v = +k;
+  }
+  renderCj();
+}
+
+function renderCj() {
+  const v = V[cj.v];
+  const b = cj.mode === "one" ? box(store.cj, cj.v + ":" + cj.p) : cjBoxVerb(cj.v);
+  document.getElementById("cj-fach").innerHTML = fachHtml(`<span class="typechip">${TYPES[v.t]}</span>`, b);
+  document.getElementById("cj-score").innerHTML = scoreHtml(cj);
+  let h = `<div class="prompt"><span class="word" lang="de">${v.de}</span>${speakBtn(v.de)}</div>
+    <div class="sub">${enText(v)} · Präsens</div>`;
+
+  if (cj.mode === "one") {
+    const cls = cj.done ? (cj.ok ? "right" : "wrong") : "";
+    h += `<form class="sentence" id="cj-form" autocomplete="off">
+      <span class="pron" lang="de">${PRON[cj.p]}</span>
+      <input class="ans ${cls}" id="cj-input" lang="de" placeholder="…" autocapitalize="off" autocorrect="off" spellcheck="false" value="${esc(cj.typed[0] || "")}" ${cj.done ? "disabled" : ""}>
+      ${umlautKeys()}
+      ${cj.done ? "" : `<button class="btn" type="submit">Prüfen</button>`}
+    </form>`;
+    if (cj.done) {
+      h += `<div class="feedback ${cj.ok ? "good" : "bad"}">
+        <span class="verdict">${cj.ok ? "Richtig!" : `Leider falsch. Richtig ist: ${PRON[cj.p]} ${v.f[cj.p]}`}</span>
+        ${cj.note ? `<span class="note">${cj.note}</span>` : ""}
+      </div>${conjTable(v, cj.p)}`;
+    }
+  } else {
+    h += `<form class="ctable" id="cj-form" autocomplete="off">${PRON.map((p, i) => {
+      const r = cj.results[i];
+      const cls = cj.done ? (r ? "right" : "wrong") : "";
+      return `<label class="p" for="cj-t${i}" lang="de">${p}</label>
+        <span><input class="ans ${cls}" id="cj-t${i}" lang="de" autocapitalize="off" autocorrect="off" spellcheck="false" value="${esc(cj.typed[i] || "")}" ${cj.done ? "disabled" : ""}>${cj.done && !r ? `<span class="solution">${v.f[i]}</span>` : ""}</span>`;
+    }).join("")}<button type="submit" hidden></button></form>
+    <div class="answer-row">${umlautKeys()}${cj.done ? "" : `<button class="btn" id="cj-check">Prüfen</button>`}</div>`;
+    if (cj.done) {
+      const n = cj.results.filter(Boolean).length;
+      h += `<div class="feedback ${n === 6 ? "good" : "bad"}"><span class="verdict">${n} von 6 richtig</span></div>${conjTable(v)}`;
+    }
+  }
+  if (cj.done && v.tip) h += `<div class="tip">${v.tip}</div>`;
+  if (cj.done) h += `<div class="actions"><span class="hint-key">Enter = weiter</span><button class="btn" id="cj-next">Weiter</button></div>`;
+
+  document.getElementById("cj-body").innerHTML = h;
+  if (!cj.done) document.getElementById(cj.mode === "one" ? "cj-input" : "cj-t0").focus({ preventScroll: true });
+  else document.getElementById("cj-next").focus({ preventScroll: true });
+}
+
+function checkCj() {
+  if (cj.done) return;
+  const v = V[cj.v];
+  if (cj.mode === "one") {
+    const val = document.getElementById("cj-input").value;
+    if (!val.trim()) return;
+    cj.typed = [val];
+    const m = matchDe(val.replace(new RegExp("^" + PRON[cj.p].split("/")[0] + "\\s+", "i"), ""), v.f[cj.p]);
+    cj.ok = !!m; cj.note = m === "translit" ? `Schreibweise mit Umlaut: ${v.f[cj.p]}` : "";
+    cj.ok ? cj.right++ : cj.wrong++;
+    grade(store.cj, cj.v + ":" + cj.p, cj.ok);
+    say(PRON[cj.p].split("/")[0] + " " + v.f[cj.p]);
+  } else {
+    cj.typed = PRON.map((_, i) => document.getElementById("cj-t" + i).value);
+    if (cj.typed.every(t => !t.trim())) return;
+    cj.results = cj.typed.map((t, i) => !!matchDe(t, v.f[i]));
+    cj.results.forEach((ok, i) => { ok ? cj.right++ : cj.wrong++; store.cj[cj.v + ":" + i] = ok ? Math.min(MAXBOX, box(store.cj, cj.v + ":" + i) + 1) : 0; });
+    save(); updateMeters();
+  }
+  cj.done = true;
+  renderCj();
+}
+
+document.getElementById("cj-body").addEventListener("submit", e => { e.preventDefault(); checkCj(); });
+document.getElementById("cj-body").addEventListener("click", e => {
+  if (e.target.closest("#cj-next")) nextCj();
+  if (e.target.closest("#cj-check")) checkCj();
+});
+// In table mode, Enter moves to the next field; on the last field it checks.
+document.getElementById("cj-body").addEventListener("keydown", e => {
+  if (e.key !== "Enter" || cj.mode !== "table" || cj.done) return;
+  const m = e.target.id && e.target.id.match(/^cj-t(\d)$/);
+  if (!m) return;
+  e.preventDefault();
+  const n = +m[1];
+  n < 5 ? document.getElementById("cj-t" + (n + 1)).focus() : checkCj();
+});
+
+// ---------- List ----------
+function renderList() {
+  document.getElementById("list-body").innerHTML = V.map((v, i) => {
+    const dots = b => `<span class="dots">${[0, 1, 2, 3, 4].map(n => `<i class="${n <= b ? "on" : ""}"></i>`).join("")}</span>`;
+    return `<tr><td class="v" lang="de">${v.de} ${speakBtn(v.de)}</td><td class="m">${enText(v)}</td>
+      ${v.f.map(f => `<td class="f" lang="de">${markForm(v, f)}</td>`).join("")}
+      <td><div class="progress-cell"><span>Übers. ${dots(box(store.tr, i))}</span><span>Konj. ${dots(cjBoxVerb(i))}</span></div></td></tr>`;
+  }).join("");
+}
+const resetBtn = document.getElementById("reset");
+let resetArmed = false;
+resetBtn.addEventListener("click", () => {
+  if (!resetArmed) { resetArmed = true; resetBtn.textContent = "Wirklich alles löschen? Nochmal klicken"; setTimeout(() => { resetArmed = false; resetBtn.textContent = "Fortschritt zurücksetzen"; }, 4000); return; }
+  store.tr = {}; store.cj = {}; save(); updateMeters(); renderList();
+  resetArmed = false; resetBtn.textContent = "Zurückgesetzt";
+});
+
+// ---------- Meters ----------
+function updateMeters() {
+  const nTr = V.filter((_, i) => box(store.tr, i) >= LEARNED).length;
+  const nCj = V.filter((_, i) => cjBoxVerb(i) >= LEARNED).length;
+  document.getElementById("m-tr").style.width = (nTr / 30 * 100) + "%";
+  document.getElementById("m-cj").style.width = (nCj / 30 * 100) + "%";
+  document.getElementById("m-tr-n").textContent = nTr + "/30";
+  document.getElementById("m-cj-n").textContent = nCj + "/30";
+}
+
+// ---------- Controls, tabs, keyboard ----------
+function segment(id, get, set) {
+  const el = document.getElementById(id);
+  const sync = () => el.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === get()));
+  el.addEventListener("click", e => { const b = e.target.closest("button"); if (!b || b.dataset.v === get()) return; set(b.dataset.v); sync(); save(); });
+  sync();
+}
+segment("tr-dir", () => tr.dir, v => { tr.dir = store.prefs.dir = v; tr.typed = ""; nextTr(); });
+segment("tr-mode", () => tr.mode, v => { tr.mode = store.prefs.mode = v; tr.typed = ""; nextTr(); });
+segment("cj-mode", () => cj.mode, v => { cj.mode = store.prefs.cjMode = v; cj.recent = []; nextCj(); });
+segment("cj-filter", () => cj.filter, v => { cj.filter = store.prefs.cjFilter = v; cj.recent = []; nextCj(); });
+
+let tab = "tr";
+try { const t = localStorage.getItem(KEY + ".tab"); if (["tr", "cj", "list"].includes(t)) tab = t; } catch (e) {}
+if (["tr", "cj", "list"].includes(location.hash.slice(1))) tab = location.hash.slice(1);
+function showTab(t) {
+  tab = t;
+  document.querySelectorAll("[data-tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === t));
+  ["tr", "cj", "list"].forEach(k => document.getElementById("pane-" + k).hidden = k !== t);
+  if (t === "list") renderList();
+  if (t === "tr") renderTr();
+  if (t === "cj") renderCj();
+  try { localStorage.setItem(KEY + ".tab", t); } catch (e) {}
+}
+document.querySelector("nav.tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b) showTab(b.dataset.tab); });
+
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const inInput = e.target.matches("input");
+  if (tab === "tr") {
+    if (tr.done && e.key === "Enter" && !e.target.closest("button")) { e.preventDefault(); nextTr(); }
+    else if (!tr.done && tr.mode === "choice" && !inInput && /^[1-4]$/.test(e.key)) {
+      const i = tr.opts[+e.key - 1]; tr.picked = i; answerTr(i === tr.cur);
+    }
+  } else if (tab === "cj" && cj.done && e.key === "Enter" && !e.target.closest("button")) { e.preventDefault(); nextCj(); }
+});
+
+updateMeters();
+nextTr();
+nextCj();
+showTab(tab);
+</script>
